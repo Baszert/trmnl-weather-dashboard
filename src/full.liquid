@@ -1,3 +1,9 @@
+{% if error %}
+<div class="layout layout--col p--10 flex flex--col flex--left">
+  <div class="value">:(<br><br>Oops! There is an issue getting the weather data. </div>
+  <div class="value--xsmall mt--4">We're on it, please wait</div>
+</div>
+{% else %}
 <div class="layout layout--col rounded">
 
   <div class="grid grid--col-3 h--full gap--xsmall">
@@ -6,22 +12,31 @@
 
       <div class="flex flex--col flex--center-y gap--xxlarge rounded p--10 w--full h--full {{ color_mode }}
         {% if color_mode == 'light' %}
-        text--black bg--gray-75
+        bg--gray-75
         {% else %}
-        text--white bg--black
+        bg--black
         {% endif %}">
 
-        <div class="flex gap--xsmall">
+        <div class="flex gap--xsmall
+          {% if color_mode == 'light' %}
+          text--black
+          {% else %}
+          text--white
+          {% endif %}
+          ">
 
           <div class="flex flex--col flex--right">
             <!-- Large number -->
-            <div class="temp-display flex gap--xsmall">
+            <div class="temp-display flex gap--xsmall lg:gap">
+
               {% assign temp_str = current_temp | append: "" %}
               {% assign temp_chars = temp_str | split: "" %}
               {% for char in temp_chars %}
-              <div class="temp-digit" data-char="{{ char }}"></div>
+              <div class="temp-digit lg:hidden" data-char="{{ char }}"></div>
+              <div class="temp-digit temp-digit--large md:hidden lg:block" data-char="{{ char }}"></div>
               {% endfor %}
-              <div class="temp-digit" data-char="°"></div>
+              <div class="temp-digit lg:hidden" data-char="°"></div>
+              <div class="temp-digit temp-digit--large md:hidden lg:block" data-char="°"></div>
             </div>
           </div>
 
@@ -29,25 +44,31 @@
 
             <div class="flex gap--xsmall flex--center-x ml--1">
               <div class="flex gap--small">
-                <div class="small-temp-digit" data-char="↑"></div>
+                <div class="small-temp-digit lg:hidden" data-char="↑"></div>
+                <div class="small-temp-digit--large md:hidden lg:block" data-char="↑"></div>
                 {% assign high_str = today_max | append: "" %}
                 {% assign high_chars = high_str | split: "" %}
                 {% for char in high_chars %}
-                <div class="small-temp-digit" data-char="{{ char }}"></div>
+                <div class="small-temp-digit lg:hidden" data-char="{{ char }}"></div>
+                <div class="small-temp-digit small-temp-digit--large md:hidden lg:block" data-char="{{ char }}"></div>
                 {% endfor %}
-                <div class="small-temp-digit" data-char="°"></div>
+                <div class="small-temp-digit lg:hidden" data-char="°"></div>
+                <div class="small-temp-digit small-temp-digit--large md:hidden lg:block" data-char="°"></div>
               </div>
             </div>
 
             <div class="flex gap--xsmall flex--center-x ml--1">
               <div class="flex gap--small">
-                <div class="small-temp-digit" data-char="↓"></div>
+                <div class="small-temp-digit lg:hidden" data-char="↓"></div>
+                <div class="small-temp-digit--large md:hidden lg:block" data-char="↓"></div>
                 {% assign low_str = today_min | append: "" %}
                 {% assign low_chars = low_str | split: "" %}
                 {% for char in low_chars %}
-                <div class="small-temp-digit" data-char="{{ char }}"></div>
+                <div class="small-temp-digit lg:hidden" data-char="{{ char }}"></div>
+                <div class="small-temp-digit small-temp-digit--large md:hidden lg:block" data-char="{{ char }}"></div>
                 {% endfor %}
-                <div class="small-temp-digit" data-char="°"></div>
+                <div class="small-temp-digit lg:hidden" data-char="°"></div>
+                <div class="small-temp-digit small-temp-digit--large md:hidden lg:block" data-char="°"></div>
               </div>
             </div>
 
@@ -55,7 +76,13 @@
 
         </div>
 
-        <div class="value grid grid--cols-4 text--center gap--xlarge px--10">
+        <div class="value lg:value--xlarge grid grid--cols-4 text--center gap--xlarge px--10 lg:mt--10
+          {% if color_mode == 'light' %}
+          text--black
+          {% else %}
+          text--white
+          {% endif %}
+          ">
           {% assign code = current.weather_code %}
           {% assign code_str = code | append: "" %}
 
@@ -80,65 +107,87 @@
         </div>
       </div>
 
-      <div class="p--8 w--full rounded flex flex--row gap--large {{ color_mode }}     
+      <div class="p--8 w--full rounded {{ color_mode }}     
         {% if color_mode == 'light' %}
-        text--black bg--gray-75
+        bg--gray-75
         {% else %}
-        text--white bg--black
+        bg--black
         {% endif %}">
 
-        <div class="location-name stretch value--xsmall flex flex--col flex--left gap--none">
-          {{ location }}
-          <span class="label--small">{{ latitude }}, {{ longitude }}</span>
-        </div>
+        <div class="
+          flex flex--row gap--large 
+          {% if color_mode == 'light' %}
+          text--black
+          {% else %}
+          text--white
+          {% endif %}">
 
-        <div class="label--small">
-          LAST UPDATE<br>
-          <span>{{ current_time }}</span>
+          <div class="location-name stretch value--xsmall flex flex--col flex--left gap--none">
+            {{ location }}
+            <span class="label--small">{{ latitude }}, {{ longitude }}</span>
+          </div>
+
+          <div class="label--small">
+            LAST UPDATE<br>
+            <span>{{ current_time }}</span>
+          </div>
+
         </div>
       </div>
 
     </div>
 
-    <div class="rounded flex flex--col py--5 px--8 gap--xlarge {{ color_mode }}
+    <div class="rounded flex flex--col py--5 px--8 gap--xlarge lg:portrait:gap--large {{ color_mode }}
       {% if color_mode == 'light' %}
-      text--black bg--gray-75
+      bg--gray-75
       {% else %}
-      text--white bg--black
+      bg--black
       {% endif %}
       ">
-      {% for i in (1..3) %}
-      <div class="flex flex--col gap--large flex--left w--full">
+      {% for i in (1..7) %}
+      <div class="flex flex--col gap--large flex--left w--full {% if forloop.index > 3 %}md:hidden{% endif %} {% if forloop.index > 3 and forloop.index <= 5 %}lg:flex{% endif %} lg:portrait:flex">
         {% assign day_max = daily.temperature_2m_max[i] | round %}
         {% assign day_min = daily.temperature_2m_min[i] | round %}
 
         {% assign day_weather_code = daily.weather_code[i] %}
         {% assign time = daily.time[i] %}
 
-        <div class="flex flex--row flex--center-y w--full gap--xlarge w--full">
+        <div class="flex flex--row flex--center-y w--full gap--xlarge w--full
+          {% if color_mode == 'light' %}
+          text--black
+          {% else %}
+          text--white
+          {% endif %}
+          ">
 
           <div class="flex flex--col flex--left gap--xsmall w--full">
-            <div class="day-name mb--1" data-date="{{ time }}"></div>
+            <div class="day-name mb--1 lg:value--xsmall" data-date="{{ time }}"></div>
             <div class="flex gap--xsmall">
-              <div class="forcast-digit" data-char="↑"></div>
+              <div class="forcast-digit lg:hidden" data-char="↑"></div>
+              <div class="forcast-digit forcast-digit--large md:hidden lg:block" data-char="↑"></div>
               {% assign day_high_str = day_max | append: "" %}
               {% assign day_high_chars = day_high_str | split: "" %}
               {% for char in day_high_chars %}
-              <div class="forcast-digit" data-char="{{ char }}"></div>
+              <div class="forcast-digit lg:hidden" data-char="{{ char }}"></div>
+              <div class="forcast-digit forcast-digit--large md:hidden lg:block" data-char="{{ char }}"></div>
               {% endfor %}
-              <div class="forcast-digit" data-char="°"></div>
+              <div class="forcast-digit lg:hidden" data-char="°"></div>
+              <div class="forcast-digit forcast-digit--large md:hidden lg:block" data-char="°"></div>
             </div>
             <div class="flex gap--xsmall">
-              <div class="forcast-digit" data-char="↓"></div>
+              <div class="forcast-digit lg:hidden" data-char="↓"></div>
+              <div class="forcast-digit forcast-digit--large md:hidden lg:block" data-char="↓"></div>
               {% assign day_low_str = day_min | append: "" %}
               {% assign day_low_chars = day_low_str | split: "" %}
               {% for char in day_low_chars %}
-              <div class="forcast-digit" data-char="{{ char }}"></div>
+              <div class="forcast-digit lg:hidden" data-char="{{ char }}"></div>
+              <div class="forcast-digit forcast-digit--large md:hidden lg:block" data-char="{{ char }}"></div>
               {% endfor %}
-              <div class="forcast-digit" data-char="°"></div>
+              <div class="forcast-digit lg:hidden" data-char="°"></div>
+              <div class="forcast-digit forcast-digit--large md:hidden lg:block" data-char="°"></div>
             </div>
           </div>
-          <div class="value mt--5 text--center">
+          <div class="value lg:value--medium mt--5 text--center">
             {% assign code = daily.weather_code[i] %}
             {% case code %}
             {% when 0, 1 %}
@@ -175,7 +224,7 @@
 
     document.querySelectorAll('.small-temp-digit').forEach(el => {
       const char = el.getAttribute('data-char');
-      el.innerHTML = renderDigit(char, 29);
+      el.innerHTML = renderDigit(char, 31);
     });
 
     document.querySelectorAll('.forcast-digit').forEach(el => {
@@ -187,4 +236,21 @@
       const dateString = el.getAttribute('data-date');
       el.textContent = getDayName(dateString);
     });
+
+    document.querySelectorAll('.temp-digit--large').forEach(el => {
+      const char = el.getAttribute('data-char');
+      el.innerHTML = renderDigit(char, 110);
+    });
+
+    document.querySelectorAll('.small-temp-digit--large').forEach(el => {
+      const char = el.getAttribute('data-char');
+      el.innerHTML = renderDigit(char, 50);
+    });
+
+    document.querySelectorAll('.forcast-digit--large').forEach(el => {
+      const char = el.getAttribute('data-char');
+      el.innerHTML = renderDigit(char, 28);
+    });
   </script>
+
+  {% endif %}

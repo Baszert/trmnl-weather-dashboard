@@ -1,12 +1,23 @@
-<div class="layout layout--col gap p--4 rounded {{ color_mode }}
+{% if error %}
+<div class="layout layout--col p--10 flex flex--col flex--left">
+  <div class="value--small">:(<br><br>Oops! There is an issue getting the weather data. </div>
+  <div class="value--xsmall mt--4">We're on it, please wait</div>
+</div>
+{% else %}
+<div class="layout layout--col gap p--5 rounded {{ color_mode }}
   {% if color_mode == 'light' %}
-  text--black bg--white
+  bg--white
   {% else %}
-  text--white bg--black
+  bg--black
   {% endif %}
   ">
 
-  <div class="flex flex--col flex--center-y gap w--full h--full border--h-2 pb--3">
+  <div class="flex flex--col flex--center-y gap--xxlarge w--full h--full border--h-2 pb--3
+    {% if color_mode == 'light' %}
+    text--black
+    {% else %}
+    text--white 
+    {% endif %}">
 
     <div class="flex gap--xsmall">
 
@@ -17,9 +28,11 @@
           {% assign temp_str = current_temp | append: "" %}
           {% assign temp_chars = temp_str | split: "" %}
           {% for char in temp_chars %}
-          <div class="temp-digit" data-char="{{ char }}"></div>
+          <div class="temp-digit lg:hidden" data-char="{{ char }}"></div>
+          <div class="temp-digit temp-digit--large md:hidden lg:block" data-char="{{ char }}"></div>
           {% endfor %}
-          <div class="temp-digit" data-char="°"></div>
+          <div class="temp-digit lg:hidden" data-char="°"></div>
+          <div class="temp-digit temp-digit--large md:hidden lg:block" data-char="°"></div>
         </div>
       </div>
 
@@ -27,25 +40,31 @@
 
         <div class="flex gap--xsmall flex--center-x ml--1">
           <div class="flex gap--small">
-            <div class="small-temp-digit" data-char="↑"></div>
+            <div class="small-temp-digit lg:hidden" data-char="↑"></div>
+            <div class="small-temp-digit--large md:hidden lg:block" data-char="↑"></div>
             {% assign high_str = today_max | append: "" %}
             {% assign high_chars = high_str | split: "" %}
             {% for char in high_chars %}
-            <div class="small-temp-digit" data-char="{{ char }}"></div>
+            <div class="small-temp-digit lg:hidden" data-char="{{ char }}"></div>
+            <div class="small-temp-digit small-temp-digit--large md:hidden lg:block" data-char="{{ char }}"></div>
             {% endfor %}
-            <div class="small-temp-digit" data-char="°"></div>
+            <div class="small-temp-digit lg:hidden" data-char="°"></div>
+            <div class="small-temp-digit small-temp-digit--large md:hidden lg:block" data-char="°"></div>
           </div>
         </div>
 
         <div class="flex gap--xsmall flex--center-x ml--1">
           <div class="flex gap--small">
-            <div class="small-temp-digit" data-char="↓"></div>
+            <div class="small-temp-digit lg:hidden" data-char="↓"></div>
+            <div class="small-temp-digit--large md:hidden lg:block" data-char="↓"></div>
             {% assign low_str = today_min | append: "" %}
             {% assign low_chars = low_str | split: "" %}
             {% for char in low_chars %}
-            <div class="small-temp-digit" data-char="{{ char }}"></div>
+            <div class="small-temp-digit lg:hidden" data-char="{{ char }}"></div>
+            <div class="small-temp-digit small-temp-digit--large md:hidden lg:block" data-char="{{ char }}"></div>
             {% endfor %}
-            <div class="small-temp-digit" data-char="°"></div>
+            <div class="small-temp-digit lg:hidden" data-char="°"></div>
+            <div class="small-temp-digit small-temp-digit--large md:hidden lg:block" data-char="°"></div>
           </div>
         </div>
 
@@ -53,7 +72,7 @@
 
     </div>
 
-    <div class="value--small grid grid--cols-8 text--center gap--medium">
+    <div class="value grid grid--cols-4 text--center gap--xlarge px--10">
       {% assign code = current.weather_code %}
       {% assign code_str = code | append: "" %}
 
@@ -78,7 +97,12 @@
     </div>
   </div>
 
-  <div class="w--full flex flex--row gap--large">
+  <div class="w--full flex flex--row gap--large pt--2
+    {% if color_mode == 'light' %}
+    text--black
+    {% else %}
+    text--white 
+    {% endif %}">
 
     <div class="location-name stretch value--xsmall flex flex--col flex--left gap--none">
       {{ location }}
@@ -93,14 +117,26 @@
 
 </div>
 
+
 <script>
   document.querySelectorAll('.temp-digit').forEach(el => {
     const char = el.getAttribute('data-char');
     el.innerHTML = renderDigit(char, 50);
   });
 
+  document.querySelectorAll('.temp-digit--large').forEach(el => {
+    const char = el.getAttribute('data-char');
+    el.innerHTML = renderDigit(char, 70);
+  });
+
   document.querySelectorAll('.small-temp-digit').forEach(el => {
     const char = el.getAttribute('data-char');
     el.innerHTML = renderDigit(char, 22);
   });
+
+  document.querySelectorAll('.small-temp-digit--large').forEach(el => {
+    const char = el.getAttribute('data-char');
+    el.innerHTML = renderDigit(char, 31);
+  });
 </script>
+{% endif %}
