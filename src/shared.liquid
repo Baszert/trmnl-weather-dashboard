@@ -121,45 +121,46 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
 <style>
-
-  .layout {
+  /* Scoped to .wd-plugin so these don't leak into other plugins in a mashup.
+     The dark/light class sits on the root in some layouts, hence ".wd-plugin.dark" too. */
+  .wd-plugin {
     font-family: "Roboto Mono";  
   }
 
-  .day-name {
+  .wd-plugin .day-name {
     font-weight: bold;
     text-transform: uppercase;
   }
 
-  .location-name {
+  .wd-plugin .location-name {
     text-transform: uppercase;
   }
 
-  .dark .number-on {
+  .wd-plugin.dark .number-on, .wd-plugin .dark .number-on {
     fill: #FFFFFF;
     color: #FFFFFF;
   }
 
-  .dark .number-off {
+  .wd-plugin.dark .number-off, .wd-plugin .dark .number-off {
     fill: #232323;
     color: #232323;
   }
 
-  .light .number-on {
+  .wd-plugin.light .number-on, .wd-plugin .light .number-on {
     fill: #000000;
     color: #000000;
   }
 
-  .light .number-off {
+  .wd-plugin.light .number-off, .wd-plugin .light .number-off {
     fill: #D9D9D9;
     color: #D9D9D9;
   }
 
-  .icon-on {
+  .wd-plugin .icon-on {
     opacity: 1;
   }
 
-  .icon-off {
+  .wd-plugin .icon-off {
     opacity: 0.2;
   }
 </style>
