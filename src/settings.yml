@@ -36,7 +36,7 @@ custom_fields:
   field_type: author_bio
   description: Yet another weather dashboard! Get a weather dashboard with a 3-day forecast, visualized by dot-matrix style numbers and some useful icons. Powered by Open-Meteo API.
   email_address: trmnl@achtnegen.nl
-  github_url: https://github.com/Bastronautik/trmnl-weather-dashboard/
+  github_url: https://github.com/Baszert/trmnl-weather-dashboard/
 - keyname: location
   name: Location
   field_type: string
