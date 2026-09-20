@@ -4,7 +4,7 @@ no_screen_padding: 'no'
 dark_mode: 'no'
 static_data: ''
 polling_verb: get
-framework_version: 2.3.7
+framework_version: 3.3.2
 serverless_language: ''
 polling_url: https://api.open-meteo.com/v1/forecast?latitude={{ trmnl.plugin_settings.custom_fields_values.latitude }}&longitude={{ trmnl.plugin_settings.custom_fields_values.longitude }}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_sum&temperature_unit={{ trmnl.plugin_settings.custom_fields_values.temperature_unit }}&timezone=auto&forecast_days=8
 polling_headers: ''
