@@ -4,6 +4,11 @@
 {% assign today_min = daily.temperature_2m_min[0] | round %}
 {% assign color_mode = trmnl.plugin_settings.custom_fields_values.color_mode | default: "dark" %}
 {% assign location = trmnl.plugin_settings.custom_fields_values.location | default: "Home" %}
+
+{% comment %} Coordinates come from the map field, or from the separate lat/long fields {% endcomment %}
+{% assign latlon = trmnl.plugin_settings.custom_fields_values.lat_lon | split: "," %}
+{% assign lat = latlon[0] | default: trmnl.plugin_settings.custom_fields_values.latitude | strip %}
+{% assign lon = latlon[1] | default: trmnl.plugin_settings.custom_fields_values.longitude | strip %}
 {% assign utc = trmnl.system.timestamp_utc %}
 {% assign offset = trmnl.user.utc_offset %}
 
