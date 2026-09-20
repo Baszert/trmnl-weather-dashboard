@@ -72,29 +72,7 @@
 
     </div>
 
-    <div class="value grid grid--cols-4 text--center gap--xlarge px--10">
-      {% assign code = current.weather_code %}
-      {% assign code_str = code | append: "" %}
-
-      <!-- Sunny -->
-      <i class="wi wi-day-sunny {% if code == 0 or code == 1 %}icon-on{% else %}icon-off{% endif %}"></i>
-      <!-- Cloudy -->
-      <i class="wi wi-cloud {% if code == 2 or code == 3 %}icon-on{% else %}icon-off{% endif %}"></i>
-      <!-- Rain -->
-      {% assign rain_codes = "51,53,55,56,57,61,63,65,66,67,80,81,82" | split: "," %}
-      <i class="wi wi-rain {% if rain_codes contains code_str %}icon-on{% else %}icon-off{% endif %}"></i>
-      <!-- Snow -->
-      {% assign snow_codes = "71,73,75,85,86" | split: "," %}
-      <i class="wi wi-snow {% if snow_codes contains code_str %}icon-on{% else %}icon-off{% endif %}"></i>
-      <!-- Windy/Foggy -->
-      <i class="wi wi-windy {% if code == 45 or code == 48 %}icon-on{% else %}icon-off{% endif %}"></i>
-      <!-- Snowflake -->
-      <i class="wi wi-snowflake-cold {% if code == 77 %}icon-on{% else %}icon-off{% endif %}"></i>
-      <!-- Strong Wind -->
-      <i class="wi wi-strong-wind {% if code == 95 %}icon-on{% else %}icon-off{% endif %}"></i>
-      <!-- Lightning -->
-      <i class="wi wi-lightning {% if code == 96 or code == 99 %}icon-on{% else %}icon-off{% endif %}"></i>
-    </div>
+    {% render "wd_iconbar", code: current.weather_code, size_cls: "value", cols_cls: "grid--cols-4", gap_cls: "gap--xlarge px--10" %}
   </div>
 
   <div class="w--full flex flex--row gap--large pt--2
@@ -119,24 +97,11 @@
 
 
 <script>
-  document.querySelectorAll('.temp-digit').forEach(el => {
-    const char = el.getAttribute('data-char');
-    el.innerHTML = renderDigit(char, 50);
-  });
-
-  document.querySelectorAll('.temp-digit--large').forEach(el => {
-    const char = el.getAttribute('data-char');
-    el.innerHTML = renderDigit(char, 70);
-  });
-
-  document.querySelectorAll('.small-temp-digit').forEach(el => {
-    const char = el.getAttribute('data-char');
-    el.innerHTML = renderDigit(char, 22);
-  });
-
-  document.querySelectorAll('.small-temp-digit--large').forEach(el => {
-    const char = el.getAttribute('data-char');
-    el.innerHTML = renderDigit(char, 31);
+  renderDigits({
+    '.temp-digit': 50,
+    '.temp-digit--large': 70,
+    '.small-temp-digit': 22,
+    '.small-temp-digit--large': 31
   });
 </script>
 {% endif %}

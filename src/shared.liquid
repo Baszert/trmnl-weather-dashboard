@@ -28,7 +28,7 @@
     'd': [1,2,3,4,6,10,11,15,16,20,21,25,26,30,31,32,33,34],
     'e': [1,2,3,4,5,6,11,16,17,18,19,21,26,31,32,33,34,35],
     'f': [1,2,3,4,5,6,11,16,17,18,19,21,26,31],
-    'g': [2,3,4,6,10,11,16,18,19,20,21,25,26,30,,32,33,34],
+    'g': [2,3,4,6,11,16,18,19,20,21,25,26,30,32,33,34],
     'h': [1,5,6,10,11,15,16,17,18,19,20,21,25,26,30,31,35],
     'i': [2,3,4,8,13,18,23,28,32,33,34],
     'j': [2,3,4,5,10,15,20,21,25,26,30,32,33,34],
@@ -74,7 +74,6 @@
     return `<svg width="${width}px" class="image-dither" viewBox="0 0 58 82" fill="none" xmlns="http://www.w3.org/2000/svg">${rects}</svg>`;
   }
 
-  // Weather code to description mapping (WMO Weather interpretation codes)
   function getWeatherDescription(code) {
     const weatherCodes = {
       0: 'clear',
@@ -109,10 +108,13 @@
     return weatherCodes[code] || 'unknown';
   }
 
-  function getDayName(dateString) {
-    const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-    const date = new Date(dateString);
-    return days[date.getDay()];
+  // Render every set of digits in one call: { selector: width }
+  function renderDigits(sizes) {
+    for (const selector in sizes) {
+      document.querySelectorAll(selector).forEach(el => {
+        el.innerHTML = renderDigit(el.getAttribute('data-char'), sizes[selector]);
+      });
+    }
   }
 </script>
 
@@ -164,3 +166,43 @@
     opacity: 0.2;
   }
 </style>
+
+
+{% comment %}
+  Weather icons live here so all four layouts stay in sync.
+  WMO codes: 0-1 clear, 2 partly cloudy, 3 cloudy, 45/48 fog, 51-67 + 80-82 rain,
+  71-75 + 85/86 snow, 77 snow grains, 95/96/99 thunderstorm.
+{% endcomment %}
+
+{% comment %} The full set, with the active one highlighted {% endcomment %}
+{% template wd_iconbar %}
+{% assign code_str = code | append: "" %}
+{% assign rain_codes = "51,53,55,56,57,61,63,65,66,67,80,81,82" | split: "," %}
+{% assign snow_codes = "71,73,75,85,86" | split: "," %}
+{% assign storm_codes = "95,96,99" | split: "," %}
+<div class="{{ size_cls }} grid {{ cols_cls }} {{ gap_cls }} text--center">
+  <i class="wi wi-day-sunny {% if code == 0 or code == 1 %}icon-on{% else %}icon-off{% endif %}"></i>
+  <i class="wi wi-day-cloudy {% if code == 2 %}icon-on{% else %}icon-off{% endif %}"></i>
+  <i class="wi wi-cloud {% if code == 3 %}icon-on{% else %}icon-off{% endif %}"></i>
+  <i class="wi wi-rain {% if rain_codes contains code_str %}icon-on{% else %}icon-off{% endif %}"></i>
+  <i class="wi wi-snow {% if snow_codes contains code_str %}icon-on{% else %}icon-off{% endif %}"></i>
+  <i class="wi wi-fog {% if code == 45 or code == 48 %}icon-on{% else %}icon-off{% endif %}"></i>
+  <i class="wi wi-snowflake-cold {% if code == 77 %}icon-on{% else %}icon-off{% endif %}"></i>
+  <i class="wi wi-lightning {% if storm_codes contains code_str %}icon-on{% else %}icon-off{% endif %}"></i>
+</div>
+{% endtemplate %}
+
+{% comment %} Just the icon for one weather code (used by the forecast) {% endcomment %}
+{% template wd_icon %}
+{% case code %}
+  {% when 0, 1 %}<i class="wi wi-day-sunny"></i>
+  {% when 2 %}<i class="wi wi-day-cloudy"></i>
+  {% when 3 %}<i class="wi wi-cloud"></i>
+  {% when 45, 48 %}<i class="wi wi-fog"></i>
+  {% when 51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82 %}<i class="wi wi-rain"></i>
+  {% when 71, 73, 75, 85, 86 %}<i class="wi wi-snow"></i>
+  {% when 77 %}<i class="wi wi-snowflake-cold"></i>
+  {% when 95, 96, 99 %}<i class="wi wi-lightning"></i>
+  {% else %}<i class="wi wi-day-cloudy"></i>
+{% endcase %}
+{% endtemplate %}
