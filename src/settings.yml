@@ -6,6 +6,7 @@ static_data: ''
 polling_verb: get
 framework_version: 3.3.2
 serverless_language: ''
+refresh_interval_floor:
 polling_url: "{% liquid\r\nassign cf = trmnl.plugin_settings.custom_fields_values\r\nassign latlon = cf.lat_lon | split: \",\"\r\nassign lat = latlon[0] | default: cf.latitude | strip\r\nassign lon = latlon[1] | default: cf.longitude | strip\r\n%}\r\nhttps://api.open-meteo.com/v1/forecast?latitude={{ lat }}&longitude={{ lon }}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_sum&temperature_unit={{ cf.temperature_unit }}&timezone=auto&forecast_days=8"
 polling_headers: ''
 polling_body: ''
