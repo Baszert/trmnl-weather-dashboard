@@ -113,11 +113,22 @@
     return weatherCodes[code] || 'unknown';
   }
 
+  // Layouts are sized for numbers of up to 2 characters ("25", "-5").
+  // Longer ones ("101" in Fahrenheit, "-12") shrink so the group keeps the same width.
+  // Every char is rendered twice (normal + large), the normal copy has lg:hidden.
+  function groupScale(el) {
+    const chars = [...el.parentElement.children]
+      .filter(c => c.classList.contains('lg:hidden') && c.hasAttribute('data-char'))
+      .map(c => c.getAttribute('data-char'));
+    const extra = chars.filter(c => !['°', '↑', '↓'].includes(c)).length - 2;
+    return extra > 0 ? (chars.length - extra) / chars.length : 1;
+  }
+
   // Render every set of digits in one call: { selector: width }
   function renderDigits(sizes) {
     for (const selector in sizes) {
       document.querySelectorAll(selector).forEach(el => {
-        el.innerHTML = renderDigit(el.getAttribute('data-char'), sizes[selector]);
+        el.innerHTML = renderDigit(el.getAttribute('data-char'), sizes[selector] * groupScale(el));
       });
     }
   }
